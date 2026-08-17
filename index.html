@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rytail — Logistics &amp; Transportation</title>
+<title>Rytail — Logistics &amp; Transportation · C08</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -330,64 +330,38 @@ body{
 
 .icon{display:inline-flex;}
 svg{display:block;}
+
+/* ---- Final full-width, no-sidebar/no-navbar layout ---- */
+.shell{display:block;width:100%;height:100dvh;}
+.main{width:100%;height:100dvh;}
+.content{padding-top:0;overflow-y:auto;}
+.page{padding:0 22px 40px 22px;}
+.top-tabs{margin:0 22px 16px 22px;padding-top:2px;}
+@media (max-width: 760px){
+  .page{padding-left:12px;padding-right:12px;}
+  .top-tabs{margin-left:12px;margin-right:12px;}
+  .grid-4{grid-template-columns:repeat(2,1fr);}
+  .grid-3{grid-template-columns:1fr;}
+  .grid-2{grid-template-columns:1fr;}
+  .drawer{width:min(400px,100vw);}
+}
+
 </style>
 </head>
 <body>
 
 <div class="shell">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <button class="collapse-btn" id="collapseBtn" title="Collapse sidebar">‹</button>
-    <div class="brand">
-      <div class="brand-mark">R</div>
-      <div>
-        <div class="brand-name">Rytail</div>
-        <div class="brand-sub">Agentic Retail Platform</div>
-      </div>
-    </div>
-
-    <div class="nav-group-label">Cycle App</div>
-    <div class="nav-item active" data-page="overview">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-      <span class="nav-label">Overview</span>
-    </div>
-    <div class="nav-item" data-page="tasks">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      <span class="nav-label">Task Workflow</span>
-    </div>
-    <div class="nav-item" data-page="agents">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.2"/><path d="M5 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/><circle cx="19" cy="7" r="1.6"/><circle cx="5" cy="7" r="1.6"/></svg>
-      <span class="nav-label">Agent Directory</span>
-    </div>
-
-    <div class="sidebar-foot">
-      <div class="avatar" style="width:24px;height:24px;font-size:9px;">LT</div>
-      <div class="sidebar-foot-text">
-        <div style="font-size:11px;font-weight:700;">Rohit T.</div>
-        <div style="font-size:9px;color:rgba(255,255,255,0.5);">Logistics Orchestrator</div>
-      </div>
-    </div>
-  </aside>
-
   <!-- MAIN -->
   <main class="main">
-    <div class="navbar" id="navbar">
-      <div class="breadcrumb">
-        <span>Cycles</span> <span>/</span> <b id="crumbCurrent">Overview</b>
-      </div>
-      <div class="navbar-right">
-        <button class="icon-btn" title="Search">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        </button>
-        <button class="icon-btn" title="Notifications">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        </button>
-        <div class="avatar">LT</div>
-      </div>
-    </div>
 
     <div class="content" id="content">
+    <div class="tabs top-tabs" id="page-tabs">
+      <button class="tab-btn active" data-page="overview">Overview</button>
+      <button class="tab-btn" data-page="tasks">Task Workflow</button>
+      <button class="tab-btn" data-page="agents">Agent Directory</button>
+    </div>
+
 
       <!-- PAGE 1: OVERVIEW -->
       <section class="page active" id="page-overview">
@@ -737,13 +711,12 @@ const crumbLabels = { overview: 'Overview', tasks: 'Task Workflow', agents: 'Age
 function goToPage(pageId){
   document.querySelectorAll('.page').forEach(p=> p.classList.remove('active'));
   document.getElementById('page-'+pageId).classList.add('active');
-  document.querySelectorAll('.nav-item[data-page]').forEach(n=>{
+  document.querySelectorAll('#page-tabs .tab-btn').forEach(n=>{
     n.classList.toggle('active', n.dataset.page === pageId);
   });
-  document.getElementById('crumbCurrent').textContent = crumbLabels[pageId];
   document.getElementById('content').scrollTop = 0;
 }
-document.querySelectorAll('.nav-item[data-page]').forEach(item=>{
+document.querySelectorAll('#page-tabs .tab-btn').forEach(item=>{
   item.addEventListener('click', ()=> goToPage(item.dataset.page));
 });
 
@@ -755,18 +728,6 @@ document.querySelectorAll('#agent-class-tabs .tab-btn').forEach(btn=>{
     activeAgentClassFilter = btn.dataset.class;
     renderAgentCards();
   });
-});
-
-// ---------- sidebar collapse ----------
-document.getElementById('collapseBtn').addEventListener('click', ()=>{
-  const sb = document.getElementById('sidebar');
-  sb.classList.toggle('collapsed');
-  document.getElementById('collapseBtn').textContent = sb.classList.contains('collapsed') ? '›' : '‹';
-});
-
-// ---------- navbar scroll effect ----------
-document.getElementById('content').addEventListener('scroll', (e)=>{
-  document.getElementById('navbar').classList.toggle('scrolled', e.target.scrollTop > 4);
 });
 
 // ---------- init ----------
